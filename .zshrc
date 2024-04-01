@@ -10,6 +10,8 @@ export HISTFILESIZE=10000
 export HISTSIZE=10000
 export SAVEHIST=10000
 
+export CXX=/usr/bin/g++
+
 setopt INC_APPEND_HISTORY
 setopt EXTENDED_HISTORY
 
@@ -59,5 +61,7 @@ alias twstart='python manage.py tailwind start'
 alias ga="git add ."
 alias gs="git status"
 alias gm="git commit -m"
+alias cb="cmake --build build"
+alias cm="cmake ../"
 
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME' 
