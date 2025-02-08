@@ -14,6 +14,8 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local logout_popup = require("awesome-wm-widgets.logout-popup-widget.logout-popup")
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -75,8 +77,8 @@ editor_cmd = terminal .. " -e " .. editor
 -- If you do not like this or do not have such a key,
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod1"
-tag_modkey = "Mod1"
+modkey = "Mod4"
+tag_modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -202,7 +204,10 @@ awful.spawn.single_instance("autorandr --change aoc_additional")
 awful.spawn.single_instance("xrandr --output HDMI-A-0 --mode 1920x1080 --r ate 239.96")
 awful.spawn.single_instance("nitrogen --restore &")
 awful.spawn.single_instance("dex -a -s ~/.config/autostart/")
-awful.spawn.single_instance("ibus-daemon -drxR")
+-- awful.spawn.single_instance("ibus-daemon -drxR")
+awful.spawn.single_instance("fcitx5")
+awful.spawn.single_instance("nm-applet")
+awful.spawn.single_instance("cbatticon")
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -405,7 +410,14 @@ globalkeys = gears.table.join(
     -- Menubar
     awful.key({ modkey }, "p", function()
         menubar.show()
-    end, { description = "show the menubar", group = "launcher" })
+    end, { description = "show the menubar", group = "launcher" }),
+    awful.key(
+        { modkey, "Shift" }, "d",
+        function()
+            logout_popup.launch()
+        end,
+        {description = "Show logout screen", group = "custom"}
+    )
 )
 
 clientkeys = gears.table.join(

@@ -1,8 +1,16 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=/home/jorenchik/Code/mdemory/Release/src/qtapp:$PATH
 
 # Le theme
 # ZSH_THEME="robbyrussell"
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+export DefaultIMModule=fcitx
+
+export GOPATH=~/go
+
 
 # Persistent history
 export HISTFILE=~/.zsh_history
@@ -12,8 +20,15 @@ export SAVEHIST=10000
 
 export CXX=/usr/bin/g++
 
+export EDITOR=nvim
+
 setopt INC_APPEND_HISTORY
 setopt EXTENDED_HISTORY
+
+export QT_QPA_PLATFORM=xcb
+export CGO_CFLAGS_ALLOW=".*" 
+export CGO_CXXFLAGS_ALLOW=".*" 
+export CGO_LDFLAGS_ALLOW=".*" 
 
 # Path
 export PYENV_ROOT="$HOME/.pyenv"
@@ -63,5 +78,18 @@ alias gs="git status"
 alias gm="git commit -m"
 alias cb="cmake --build build"
 alias cm="cmake ../"
+alias timer='termdown'
 
+
+# alias vim="nvim"
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME' 
+alias state='nvim /home/jorenchik/state.md'
+alias build='sh build.sh'
+
+PATH="/home/jorenchik/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/jorenchik/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/jorenchik/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/jorenchik/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/jorenchik/perl5"; export PERL_MM_OPT;
+
+
