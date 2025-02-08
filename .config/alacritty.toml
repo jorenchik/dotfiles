@@ -1,0 +1,7 @@
+[window]
+padding = {x = 4, y = 4} 
+
+# [general]
+# import = [
+#     "~/.config/alacritty/themes/themes/dayfox.toml"
+# ]
