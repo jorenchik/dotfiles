@@ -28,7 +28,7 @@ end
 
 local setup_workspace_dev = function()
     delayed_spawn(1, "alacritty", "1")
-    delayed_spawn(2, "firefox", "3")
+    delayed_spawn(2, "floorb", "3")
     delayed_spawn(3, "spacefm", "4")
 end
 
@@ -65,7 +65,35 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "dremora/theme.lua")
+
+
+
+
+local themes = {
+    "blackburn",       -- 1
+    "copland",         -- 2
+    "dremora",         -- 3
+    "holo",            -- 4
+    "multicolor",      -- 5
+    "powerarrow",      -- 6
+    "powerarrow-dark", -- 7
+    "rainbow",         -- 8
+    "steamburn",       -- 9
+    "vertex"           -- 10
+}
+
+-- local chosen_theme = themes[3]
+-- local chosen_theme = "dremora"
+-- beautiful.init(string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme))
+
+local file = io.open(os.getenv("HOME") .. "/.config/awesome/current_theme.txt", "r")
+local chosen_theme = file and file:read("*l") or "dremora"
+if file then file:close() end
+
+beautiful.init(string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme))
+
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
@@ -204,10 +232,13 @@ awful.spawn.single_instance("autorandr --change aoc_additional")
 awful.spawn.single_instance("xrandr --output HDMI-A-0 --mode 1920x1080 --r ate 239.96")
 awful.spawn.single_instance("nitrogen --restore &")
 awful.spawn.single_instance("dex -a -s ~/.config/autostart/")
--- awful.spawn.single_instance("ibus-daemon -drxR")
-awful.spawn.single_instance("fcitx5")
+awful.spawn.single_instance("ibus-daemon -drxR")
+-- awful.spawn.single_instance("fcitx5")
 awful.spawn.single_instance("nm-applet")
 awful.spawn.single_instance("cbatticon")
+-- awful.spawn.single_instance("nextcloud")
+awful.spawn.single_instance("picom")
+awful.spawn.single_instance("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -339,12 +370,23 @@ globalkeys = gears.table.join(
     awful.key({}, "XF86AudioMute", function()
         awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 0%")
     end, { description = "down the volume to 0%", group = "utils" }),
+
     awful.key({}, "XF86MonBrightnessDown", function()
         awful.spawn("brightnessctl s 10-")
     end, { description = "down the brightness by 10%", group = "utils" }),
+
     awful.key({}, "XF86MonBrightnessUp", function()
         awful.spawn("brightnessctl s 10+")
     end, { description = "up the brightness by 10%", group = "utils" }),
+
+    awful.key({modkey, "Shift"}, "Down", function()
+        awful.spawn("brightnessctl s 10-")
+    end, { description = "down the brightness by 10% (2)", group = "utils" }),
+
+    awful.key({modkey, "Shift"}, "Up", function()
+        awful.spawn("brightnessctl s 10+")
+    end, { description = "up the brightness by 10% (2)", group = "utils" }),
+
     awful.key({}, "Print", function()
         awful.spawn("flameshot gui")
     end, { description = "flameshot", group = "utils" }),
@@ -356,10 +398,11 @@ globalkeys = gears.table.join(
         awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -10%")
     end, { description = "open a terminal", group = "launcher" }),
     awful.key({ modkey }, "b", function()
-        awful.spawn("firefox")
-    end, { description = "open a firefox browser", group = "launcher" }),
+        awful.spawn("floorp")
+    end, { description = "open floorp", group = "launcher" }),
     awful.key({ modkey }, "d", function()
-        awful.spawn('rofi -combi-modi window,drun,ssh -theme solarized -font "hack 10" -show combi')
+        -- awful.spawn('rofi -combi-modi window,drun,ssh -theme solarized -font "hack 10" -show combi')
+        awful.spawn('rofi -combi-modi window,drun,ssh -font "hack 10" -show combi')
     end, { description = "spawn a rofi dmenu", group = "launcher" }),
     awful.key({ modkey, "Control" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
     awful.key({ modkey, "Shift" }, "q", awesome.quit, { description = "quit awesome", group = "awesome" }),
@@ -417,7 +460,41 @@ globalkeys = gears.table.join(
             logout_popup.launch()
         end,
         {description = "Show logout screen", group = "custom"}
-    )
+    ),
+
+    awful.key({ modkey, "Shift" }, "r", 
+            function() 
+                awful.spawn.with_shell("python ~/.local/bin/scripts/wallpaper_changer/pick_wallpaper.py --random") 
+            end,
+              {description = "random wallpaper", group = "custom"}),
+
+    awful.key({ modkey, "Shift" }, "Left", 
+            function() 
+                awful.spawn.with_shell("python ~/.local/bin/scripts/wallpaper_changer/pick_wallpaper.py --prev") 
+            end,
+              {description = "prev wallpaper", group = "custom"}),
+
+    awful.key({ modkey, "Shift" }, "Right", 
+            function() 
+                awful.spawn.with_shell("python ~/.local/bin/scripts/wallpaper_changer/pick_wallpaper.py --next") 
+            end,
+              {description = "next wallpaper", group = "custom"}),
+
+    awful.key({ modkey, "Shift" }, "n", 
+            function() 
+                awful.spawn.with_shell("python ~/.local/bin/scripts/gui_picker.py > /dev/null 2>&1") 
+            end,
+              {description = "set redshift", group = "custom"}),
+
+    awful.key({ modkey, "Shift" }, "t", function()
+        awful.spawn.with_shell("~/.local/bin/scripts/pick_theme.sh")
+    end,
+        { description = "choose theme via rofi", group = "themes" }),
+
+    awful.key({ modkey, "Shift" }, "l", function()
+        awful.spawn.with_shell("~/.local/bin/scripts/toggle_activate_linux.sh")
+    end,
+        { description = "(de)activate linux", group = "linux" })
 )
 
 clientkeys = gears.table.join(
@@ -523,7 +600,7 @@ clientbuttons = gears.table.join(
 root.keys(globalkeys)
 -- }}}
 
-beautiful.useless_gap = 10
+beautiful.useless_gap = 12
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
@@ -541,6 +618,18 @@ awful.rules.rules = {
             screen = awful.screen.preferred,
             placement = awful.placement.no_overlap + awful.placement.no_offscreen,
         },
+    },
+
+    -- Redshift picker GUI as overlay.
+    { rule = { name = "Redshift Picker" },
+      properties = {
+        floating = true,
+        ontop = true,
+        sticky = true,
+        skip_taskbar = true,
+        focusable = true,
+        placement = awful.placement.centered
+      }
     },
 
     -- Floating clients.
@@ -640,15 +729,31 @@ client.connect_signal("request::titlebars", function(c)
     })
 end)
 
+client.connect_signal("manage", function (c)
+    c.shape = function(cr,w,h)
+        gears.shape.rounded_rect(cr,w,h,10)
+    end
+end)
+
+
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
     c:emit_signal("request::activate", "mouse_enter", { raise = false })
 end)
 
-client.connect_signal("focus", function(c)
-    c.border_color = beautiful.border_focus
-end)
-client.connect_signal("unfocus", function(c)
-    c.border_color = beautiful.border_normal
-end)
+-- client.connect_signal("focus", function(c)
+--     c.border_color = beautiful.border_focus
+-- end)
+
+-- client.connect_signal("unfocus", function(c)
+--     c.border_color = beautiful.border_normal
+-- end)
+
 -- }}}
+
+
+client.connect_signal("manage", function (c)
+    if c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating then
+        awful.placement.centered(c, { honor_workarea = true })
+    end
+end)
