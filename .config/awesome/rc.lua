@@ -372,19 +372,19 @@ globalkeys = gears.table.join(
     end, { description = "down the volume to 0%", group = "utils" }),
 
     awful.key({}, "XF86MonBrightnessDown", function()
-        awful.spawn("brightnessctl s 10-")
+        awful.spawn("brightnessctl s 10%-")
     end, { description = "down the brightness by 10%", group = "utils" }),
 
     awful.key({}, "XF86MonBrightnessUp", function()
-        awful.spawn("brightnessctl s 10+")
+        awful.spawn("brightnessctl s +10%")
     end, { description = "up the brightness by 10%", group = "utils" }),
 
     awful.key({modkey, "Shift"}, "Down", function()
-        awful.spawn("brightnessctl s 10-")
+        awful.spawn("brightnessctl s 10%-")
     end, { description = "down the brightness by 10% (2)", group = "utils" }),
 
     awful.key({modkey, "Shift"}, "Up", function()
-        awful.spawn("brightnessctl s 10+")
+        awful.spawn("brightnessctl s +10%")
     end, { description = "up the brightness by 10% (2)", group = "utils" }),
 
     awful.key({}, "Print", function()
